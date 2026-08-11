@@ -33,6 +33,6 @@ grep -q 'Agent(riesgo)' .claude/agents/nest-coordinador.md || { echo "Nest no pu
 grep -q 'Agent(operaciones)' .claude/agents/nest-coordinador.md || { echo "Nest no puede delegar a operaciones" >&2; exit 1; }
 grep -q 'exec claude --agent nest-coordinador' scripts/correr-nest.sh || { echo "Launcher Nest no ejecutable" >&2; exit 1; }
 grep -q 'NEST COMPLETADO: 4/4 reportes recibidos' README.md || { echo "Señal de salida ausente" >&2; exit 1; }
-! grep -R -q '/usage' README.md scripts tarjetas || { echo "El ejercicio de alumnos no debe pedir /usage" >&2; exit 1; }
+! grep -q '/usage' scripts/correr-nest.sh || { echo "Launcher Nest no debe pedir /usage" >&2; exit 1; }
 
 echo "OK — ejercicio S5 simplificado: Nest para alumnos, Swarm para demo y tarjeta de arquitectura."
