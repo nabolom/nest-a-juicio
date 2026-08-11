@@ -1,57 +1,94 @@
 # Nest a juicio — ejercicio final de la S5
 
-> **La pregunta no es “¿puedo usar seis agentes?”. La pregunta es “¿qué gané que justifique seis agentes?”.**
+> **La pregunta no es “¿puedo usar seis agentes?”. La pregunta es “¿qué ganó este diseño que justifique seis agentes?”.**
 
-Este es el ejercicio que cierra el curso. En S1 diseñaste antes de automatizar. En S2 mediste antes de confiar. En S3 hiciste que el sistema corriera y parara. En S4 pusiste límites y trazabilidad. Ahora aplicas la misma disciplina a la arquitectura: **un nest de subagentes no se adopta por intuición; se compara contra una línea base y se juzga con evidencia.**
+En la S1 diseñaste antes de automatizar. En la S2 mediste antes de confiar. Ahora aplicarás la misma disciplina a la arquitectura: un sistema con subagentes no se adopta porque se ve avanzado; se compara con una alternativa simple y se juzga con evidencia.
 
-No estás haciendo cuatro demos. Estás ejecutando un pequeño experimento controlado.
-
----
-
-## Qué vas a aprender
-
-Al terminar podrás defender una de estas frases con números, no con gusto personal:
-
-> “Para esta tarea, distribuir el trabajo entre seis subagentes **sí** justificó el costo adicional porque…”
-
-> “Para esta tarea, seis subagentes **no** justificaron el costo adicional porque…”
-
-> “Todavía no puedo decidir porque mi comparación no controló una condición importante.”
-
-Tu entregable final son **dos tarjetas de veredicto**: una para una tarea paralela y otra para una tarea secuencial. El contraste entre ambas es la lección.
+Este repo es un experimento controlado. Primero conocerás los dos casos. Luego verás las dos arquitecturas que los resolverán. **Solo después** harás una predicción. Finalmente correrás el experimento y confrontarás tu intuición con los datos.
 
 ---
 
-## El diseño del experimento
+## Parte 0 — Conoce los dos casos antes de predecir
 
-En las cuatro corridas se mantienen constantes el corpus, el formato de salida, la rúbrica y el modelo del líder. Solo cambia una variable: **si el líder puede o no delegar a subagentes**.
+No ejecutes nada todavía. Lee estos dos escenarios; son la situación sobre la que vas a formar una hipótesis.
 
-| Concepto | Qué significa aquí | Por qué importa |
-|---|---|---|
-| **Baseline** | Un solo agente resuelve la tarea; la herramienta `Agent` está bloqueada. | Es tu línea base. Sin ella no sabes si el nest agregó valor o solo costo. |
-| **Nest** | Un líder (`nest-coordinador`) delega una fuente a cada uno de seis lectores y después sintetiza. | Es la arquitectura bajo juicio. |
-| **Corpus fijo** | Las seis fuentes ya viven en `fuentes/`; no uses web ni archivos externos. | Las fuentes no cambian entre corridas. Así no atribuyes al nest una diferencia causada por información distinta. |
-| **Rúbrica** | Cinco checks verificables por tarea. | Evita calificar “se ve mejor” y obliga a comparar con la misma definición de calidad. |
-| **`/usage`** | Tokens, costo estimado y atribución de uso. | Hace visible el costo relativo del diseño. No es una factura ni una traza completa. |
+| Caso | Situación de negocio | Tipo de información | Lo que debe decidir el sistema |
+|---|---|---|---|
+| **A — Lanzamiento de Cobranza Pro** | Horizonte debe decidir si lanza un nuevo módulo el 15 de octubre. | Seis notas independientes de producto, ventas, soporte, finanzas, legal y operaciones. | Lanzar, lanzar con condiciones o posponer; además, identificar evidencia, riesgos y condiciones. |
+| **B — Factura con OC faltante** | Debes decidir qué hacer con una factura de $54,500 con una orden de compra que no aparece. | Seis reglas que forman una cadena: factura → política de OC → resultado disponible → umbral → escalamiento → restricción de operación. | Aprobar, rechazar o escalar; además, justificar cada eslabón y producir una acción operativa. |
 
-> **Regla experimental:** si cambias el modelo, las fuentes, la tarea, las herramientas o la rúbrica entre baseline y nest, ya no comparas una sola variable. No podrás defender el resultado.
+Puedes abrir los contratos completos si quieres ver el formato de salida:
 
----
+- [`tareas/tarea-a-paralela.md`](tareas/tarea-a-paralela.md)
+- [`tareas/tarea-b-secuencial.md`](tareas/tarea-b-secuencial.md)
 
-## Antes de correr nada: escribe tu predicción
-
-Antes de abrir Claude Code, completa estas dos frases en una nota o al inicio de tus tarjetas:
-
-1. **Tarea A:** “Creo que el nest [sí/no] justificará su costo porque…”
-2. **Tarea B:** “Creo que el nest [sí/no] justificará su costo porque…”
-
-No intentes acertar. Esta predicción te obliga a revelar tu intuición antes de ver los números. La brecha entre tu predicción y los datos será parte de tu debrief.
+> **La diferencia importante:** en A, cada fuente puede leerse sin esperar a las otras. En B, cada regla cambia cómo entiendes la siguiente. No estamos afirmando que una arquitectura ganará; estamos identificando una diferencia estructural que vale la pena poner a prueba.
 
 ---
 
-## Paso 1 — Preflight: confirma que puedes participar
+## Parte 1 — Entiende qué va a ejecutar cada arquitectura
 
-Primero clona y valida el entorno:
+No compararás “Claude contra seis Claudes”. Compararás dos formas de organizar el mismo trabajo.
+
+### Arquitectura 1: un solo agente — el baseline
+
+```text
+                ┌──────────────────────────────────┐
+                │          UN SOLO AGENTE           │
+                │ lee A1…A6 (o B1…B6), decide y     │
+                │ entrega la respuesta final        │
+                └──────────────────────────────────┘
+```
+
+El agente único recibe todo el corpus en el mismo contexto. Para el ejercicio, Claude Code abre con la herramienta `Agent` bloqueada: no puede delegar aunque quisiera hacerlo.
+
+**Qué pregunta responde el baseline:** “¿Qué calidad, tiempo y consumo necesito si no agrego coordinación?” Sin esta línea base, un nest no puede demostrar valor; solo puede mostrar que gastó más.
+
+### Arquitectura 2: líder + seis lectores — el nest
+
+```text
+                         ┌──────────────────────┐
+                         │  nest-coordinador    │
+                         └──────────┬───────────┘
+            ┌───────────┬───────────┼───────────┬───────────┬───────────┐
+            ▼           ▼           ▼           ▼           ▼           ▼
+       fuente-1    fuente-2    fuente-3    fuente-4    fuente-5    fuente-6
+       lee una      lee una     lee una      lee una     lee una      lee una
+       fuente       fuente      fuente       fuente      fuente       fuente
+            └───────────┴───────────┴───────────┴───────────┴───────────┘
+                                      ▼
+                         ┌──────────────────────┐
+                         │ líder recibe seis    │
+                         │ hallazgos y sintetiza│
+                         └──────────────────────┘
+```
+
+El líder no debería leer y resolver todo por sí solo. Debe delegar una fuente a cada lector, esperar los seis resultados y sintetizar después. El archivo [`.claude/agents/nest-coordinador.md`](.claude/agents/nest-coordinador.md) impone ese comportamiento; los seis archivos `fuente-*` delimitan el trabajo de cada lector.
+
+**Qué pregunta responde el nest:** “¿La distribución de lectura y la posterior síntesis compran suficiente cobertura o velocidad para justificar tokens y coordinación adicionales?”
+
+| Mantienes fijo | Cambias |
+|---|---|
+| Caso, corpus, formato de salida, modelo del líder, rúbrica y herramientas externas | Solo la posibilidad de delegar a subagentes |
+
+> Si cambias fuentes, modelo, tarea o rúbrica entre dos corridas, ya no sabrás qué causó la diferencia.
+
+---
+
+## Parte 2 — Ahora sí: escribe una predicción informada
+
+Con el contexto de A/B y de ambas arquitecturas, escribe dos frases en una nota o al inicio de tus tarjetas:
+
+1. **A:** “Dado que las seis notas son independientes, creo que el nest [sí/no] justificará su costo porque…”
+2. **B:** “Dado que las seis reglas forman una cadena, creo que el nest [sí/no] justificará su costo porque…”
+
+No estás adivinando una respuesta correcta. Estás declarando una hipótesis que los datos podrán confirmar, contradecir o dejar sin resolver.
+
+---
+
+## Parte 3 — Valida el entorno
+
+Ahora sí prepara tu terminal:
 
 ```bash
 git clone https://github.com/nabolom/nest-a-juicio.git
@@ -59,99 +96,47 @@ cd nest-a-juicio
 bash scripts/empezar.sh
 ```
 
-**Qué ejecuta:** una revisión de instalación, autenticación y estructura del ejercicio.
+**Qué ejecuta:** verifica instalación, autenticación y archivos del ejercicio.
 
-**Por qué lo ejecutas:** queremos detectar un problema de setup antes de entrar a las cuatro corridas. No pierdas veinte minutos del ejercicio porque tu terminal no encuentra Claude Code o porque no iniciaste sesión.
+**Por qué lo haces ahora:** un error de setup no es evidencia sobre multiagente. Lo sacamos del experimento antes de correr las cuatro comparaciones.
 
-**Qué debe ocurrir:** debes ver `OK` y una lista de las cuatro corridas. Si no sucede, el mensaje te dirá si falta Claude Code o si debes correr `claude auth login`.
-
----
-
-## Paso 2 — La Tarea A: fuentes independientes
-
-La Tarea A pide producir un brief de lanzamiento a partir de seis notas independientes: producto, ventas, soporte, finanzas, legal y operaciones. Ninguna fuente necesita el resultado de otra para ser leída.
-
-> **Hipótesis A:** al repartir seis lecturas independientes, el nest podría mejorar cobertura o duración. Pero solo justifica su costo si la rúbrica detecta una mejora suficiente.
-
-### 2A. Corre el baseline A
-
-```bash
-bash scripts/correr-baseline-a.sh
-```
-
-**Qué ejecuta:** Claude Code abre con la Tarea A ya cargada y con `--disallowedTools Agent`. El agente principal lee y sintetiza por sí solo.
-
-**Por qué empieza aquí:** necesitas saber qué tan bien puede resolver la tarea **sin** arquitectura distribuida. Si el baseline ya obtiene 5/5 rápidamente, el nest tiene una carga de prueba muy alta: debe aportar algo adicional para merecer sus tokens.
-
-**Qué debes observar:** no verás delegaciones. Al terminar, la respuesta debe contener el brief con evidencia por fuente, riesgos y condiciones para lanzar.
-
-### 2B. Corre el nest A
-
-```bash
-bash scripts/correr-nest-a.sh
-```
-
-**Qué ejecuta:** Claude Code abre con `nest-coordinador`. Ese líder tiene una regla obligatoria: llamar a `fuente-1` hasta `fuente-6`, una por fuente, recibir seis hallazgos y solo entonces sintetizar.
-
-**Por qué existe esta segunda corrida:** ahora pones a prueba la intuición de que la paralelización ayuda cuando las unidades de investigación son independientes.
-
-**Qué debe ocurrir para que sea válida:** debes ver seis delegaciones en el transcript y esta línea final exacta:
-
-```text
-NEST COMPLETADO: 6/6 fuentes recibidas.
-```
-
-Si falta una delegación o el cierre, la corrida no prueba la arquitectura que queríamos probar. Escribe `/exit` y repite **el mismo script**; no pegues instrucciones adicionales.
-
-### 2C. Captura la evidencia A
-
-Después de cada una de las dos corridas A, antes de salir:
-
-1. Escribe `/usage` dentro de Claude Code.
-2. Toma una captura de la salida.
-3. Registra cuánto tardó la tarea con tu cronómetro.
-4. Aplica [`rubricas/rubrica-a.md`](rubricas/rubrica-a.md): cada check vale un punto, máximo 5.
-5. Escribe `/exit` para volver a la terminal.
-
-**Qué estás aprendiendo:** no preguntas “¿cuál respuesta me gustó más?”. Preguntas si los tokens y la coordinación adicionales compraron más cobertura, más calidad o menos tiempo.
+**Qué debe pasar:** debe aparecer `OK` y una lista de los cuatro scripts. Si te pide iniciar sesión, corre `claude auth login` y vuelve a lanzar `bash scripts/empezar.sh`.
 
 ---
 
-## Paso 3 — La Tarea B: dependencias secuenciales
+## Parte 4 — Corre el experimento, por pares
 
-La Tarea B decide qué hacer con una factura. Sus seis fuentes no son seis opiniones independientes: forman una cadena de reglas. La política de OC afecta el estado; el estado afecta el umbral; el umbral afecta el escalamiento; y la restricción final determina qué puede hacer el sistema.
+No corras las cuatro sesiones de memoria ni interpretes al vuelo. Ejecuta cada par completo y toma evidencia antes de pasar al siguiente caso.
 
-> **Hipótesis B:** distribuir una cadena de decisión puede añadir coordinación sin mejorar la respuesta. El nest podría perder contra un solo agente y ese resultado sería valioso.
+### Par A — ¿la paralelización de fuentes independientes compra valor?
 
-### 3A. Corre el baseline B
+| Orden | Ejecutas en la terminal | Qué estás probando | Qué debe ocurrir |
+|---|---|---|---|
+| A1 | `bash scripts/correr-baseline-a.sh` | La referencia: qué tan bien puede un agente único leer las seis notas y producir el brief. | No hay delegaciones. |
+| A2 | `bash scripts/correr-nest-a.sh` | Si seis lectores especializados mejoran cobertura o duración frente a esa referencia. | Seis delegaciones y `NEST COMPLETADO: 6/6 fuentes recibidas.` |
 
-```bash
-bash scripts/correr-baseline-b.sh
-```
+### Par B — ¿la paralelización de una cadena agrega valor o fricción?
 
-**Qué ejecuta:** un solo agente resuelve la cadena de B1 a B6. La delegación está bloqueada.
+| Orden | Ejecutas en la terminal | Qué estás probando | Qué debe ocurrir |
+|---|---|---|---|
+| B1 | `bash scripts/correr-baseline-b.sh` | La referencia: un agente único conserva la cadena completa en un solo contexto. | No hay delegaciones. |
+| B2 | `bash scripts/correr-nest-b.sh` | Si repartir una cadena de reglas mejora algo suficiente para compensar que el líder tenga que recomponerla. | Seis delegaciones y `NEST COMPLETADO: 6/6 fuentes recibidas.` |
 
-**Por qué lo ejecutas:** estableces la calidad y el costo de un agente que puede leer la cadena completa en un solo contexto. Esta es la alternativa real que un nest tendría que superar.
+El baseline inicia Claude Code con `--disallowedTools Agent`, así que la ausencia de delegación es una condición técnica, no una promesa. El nest inicia `nest-coordinador`, que debe llamar a `fuente-1` hasta `fuente-6`. [1] [2]
 
-**Qué debes observar:** la respuesta correcta no aprueba ni rechaza definitivamente: debe escalar, nombrar la OC faltante, el umbral y el canal correcto.
-
-### 3B. Corre el nest B
-
-```bash
-bash scripts/correr-nest-b.sh
-```
-
-**Qué ejecuta:** el mismo `nest-coordinador` distribuye B1–B6 a seis lectores y después intenta recomponer la cadena.
-
-**Por qué lo ejecutas:** no para demostrar que “multiagente funciona”, sino para probar cuándo la arquitectura añade fricción. Una cadena secuencial puede necesitar contexto compartido más que paralelización.
-
-**Qué debe ocurrir para que sea válida:** de nuevo, seis delegaciones y `NEST COMPLETADO: 6/6 fuentes recibidas.`. Después captura `/usage`, cronometra y aplica [`rubricas/rubrica-b.md`](rubricas/rubrica-b.md).
+> **Una corrida nest inválida** no prueba nada. Si no ves las seis delegaciones y la línea exacta `NEST COMPLETADO: 6/6 fuentes recibidas.`, escribe `/exit` y repite el mismo script. No agregues un prompt extra: cambiarías el experimento.
 
 ---
 
-## Paso 4 — Registra los cuatro resultados
+## Parte 5 — Después de cada corrida: captura evidencia antes de opinar
 
-Ahora que tienes evidencia, conviértela en archivos. Reemplaza los valores entre `< >` con lo que viste en `/usage`, tu cronómetro y la rúbrica.
+Cuando Claude entregue su respuesta, pero antes de salir:
+
+1. Escribe `/usage` dentro de Claude Code y toma una captura.
+2. Detén tu cronómetro.
+3. Aplica la rúbrica correcta: [`A`](rubricas/rubrica-a.md) o [`B`](rubricas/rubrica-b.md). Son cinco checks verificables; no califiques por gusto.
+4. Escribe `/exit`.
+5. Registra los seis datos que obtuviste:
 
 ```bash
 bash scripts/registrar-corrida.sh baseline-a <tokens> <costo_usd> <pct_subagentes> <segundos> <calidad_0a5>
@@ -160,76 +145,68 @@ bash scripts/registrar-corrida.sh baseline-b <tokens> <costo_usd> <pct_subagente
 bash scripts/registrar-corrida.sh nest-b     <tokens> <costo_usd> <pct_subagentes> <segundos> <calidad_0a5>
 ```
 
-| Dato | Qué responde | Cómo interpretarlo |
-|---|---|---|
-| Tokens totales | ¿Cuánto trabajo de modelo consumió cada diseño? | Es la métrica principal de costo relativo. |
-| Costo estimado | ¿Cómo se traduce ese consumo a dólares de lista? | Úsalo para comparar dentro de la misma configuración, no como factura. |
-| % atribuido a subagentes | ¿Qué porción del uso ocurrió fuera del hilo líder? | Es trabajo distribuido, no solamente “coordinación”. |
-| Duración | ¿Qué diseño terminó antes? | La paralelización solo vale si baja tiempo o sube calidad de forma útil. |
-| Calidad 0–5 | ¿Cuántos checks objetivamente cumplió? | Es la defensa contra el “me pareció mejor”. |
+| Evidencia | Lo que te permite afirmar |
+|---|---|
+| Tokens y costo estimado | Cuánto consumo adicional compró el nest. |
+| Duración | Si repartir trabajo redujo o agregó tiempo. |
+| Calidad 0–5 | Si la respuesta mejoró según una definición fijada antes de verla. |
+| % atribuido a subagentes | Qué parte del uso ocurrió fuera del hilo líder. No equivale solo a coordinación. |
+
+`/usage` es un indicador relativo de consumo para comparar la misma configuración; no es una factura ni una traza de cada handoff. [3]
 
 ---
 
-## Paso 5 — Emite el juicio, no un resumen
+## Parte 6 — Emite dos veredictos
 
-Crea tus dos tarjetas:
+Crea tus tarjetas:
 
 ```bash
 cp tarjetas/PLANTILLA-veredicto.md resultados/veredicto-a.md
 cp tarjetas/PLANTILLA-veredicto.md resultados/veredicto-b.md
 ```
 
-En cada una calcula:
+En cada tarjeta calcula:
 
 | Cálculo | Pregunta que responde |
 |---|---|
-| **N× tokens** = `tokens_nest ÷ tokens_baseline` | ¿Cuánto consumo adicional compró el nest? |
+| **N× tokens** = `tokens_nest ÷ tokens_baseline` | ¿Cuánto consumo adicional pagaste? |
 | **N× costo** = `costo_nest ÷ costo_baseline` | ¿Cuánto costo estimado adicional pagaste? |
-| **Δ calidad** = `calidad_nest − calidad_baseline` | ¿La arquitectura mejoró la respuesta verificable? |
 | **Δ duración** = `duración_nest − duración_baseline` | ¿La arquitectura ganó o perdió tiempo? |
+| **Δ calidad** = `calidad_nest − calidad_baseline` | ¿La arquitectura mejoró la respuesta verificable? |
 
-Elige una sola conclusión por tarea:
+Elige una sola conclusión por caso:
 
-| Veredicto | Cuándo es defendible |
+| Veredicto | Cuándo aplica |
 |---|---|
-| **Justifica** | El beneficio de calidad o duración compensa el N× adicional para esta tarea. |
-| **No justifica** | El nest costó más y no produjo un beneficio proporcional. |
-| **Evidencia insuficiente** | Una condición cambió, faltan datos o no puedes aplicar la rúbrica con honestidad. |
+| **Justifica** | La mejora de calidad o duración compensa el costo adicional para este tipo de tarea. |
+| **No justifica** | El nest gastó más y no compró un beneficio proporcional. |
+| **Evidencia insuficiente** | Cambiaste una condición, faltan datos o la rúbrica no permite decidir. |
 
-> Un nest que pierde **no es un fracaso del ejercicio**. Es un hallazgo: evitaste meter complejidad donde no compraba valor.
+Al final, vuelve a las predicciones que escribiste después de entender el escenario. ¿Qué confirmó o cambió la evidencia? Esa conversación es el debrief.
 
----
-
-## El debrief: compara pares, no las cuatro corridas juntas
-
-1. Compara **baseline A vs. nest A**. ¿Qué compraron las seis lecturas paralelas?
-2. Compara **baseline B vs. nest B**. ¿Qué costo introdujo distribuir una cadena de decisión?
-3. Vuelve a tus dos predicciones. ¿Qué creías antes de ejecutar y qué te obligan a creer los datos?
-4. Termina con una regla para tu propio proyecto: “Usaré subagentes cuando…” o “No usaré subagentes cuando…”.
-
-Esta es la conclusión de la S5 y del curso: **no adoptes una arquitectura porque existe. Diseña la prueba que tendría que ganar para merecer existir.**
+> Un nest que pierde no es un fracaso. Es una decisión de arquitectura que ya no tendrás que justificar ni pagar en producción.
 
 ---
 
-## Si te atoraste
+## Si te atoras
 
 | Lo que ves | Qué significa | Qué haces |
 |---|---|---|
-| `claude: command not found` | Claude Code no está instalado o no está en tu PATH. | Instálalo, abre una terminal nueva y repite `bash scripts/empezar.sh`. |
-| Error de autenticación | Claude Code no puede iniciar una sesión. | Corre `claude auth login` y repite el preflight. |
-| No aparecen seis delegaciones | No ejecutaste una corrida nest válida. | Escribe `/exit` y repite `bash scripts/correr-nest-a.sh` o `...nest-b.sh`. |
-| No entiendes `/usage` | Tienes datos, pero aún no sabes interpretarlos. | Toma captura y consérvala para el debrief. |
+| `claude: command not found` | Claude Code no está instalado o no quedó en el PATH. | Instálalo, abre una terminal nueva y corre `bash scripts/empezar.sh`. |
+| Error de autenticación | No hay una sesión iniciada. | Corre `claude auth login` y vuelve al preflight. |
+| No hay seis delegaciones | No ejecutaste un nest válido. | `/exit` y repite el launcher nest. |
+| No entiendes `/usage` | Tienes evidencia, pero necesitas ayuda para leerla. | Toma captura; se interpreta durante el debrief. |
 
 ## Qué hay dentro
 
 | Ruta | Por qué existe |
 |---|---|
-| `scripts/` | El camino ejecutable; evita que tengas que copiar prompts o flags. |
-| `.claude/agents/` | Hace explícita la división de trabajo entre líder y seis lectores. |
-| `tareas/` | Define exactamente lo que ambas arquitecturas deben resolver. |
+| `scripts/` | Abre cada condición experimental sin copiar prompts ni flags a mano. |
+| `.claude/agents/` | Hace explícita la división de trabajo entre el líder y seis lectores. |
+| `tareas/` | Define los dos escenarios que ambas arquitecturas deben resolver. |
 | `fuentes/` | Mantiene fija la información entre corridas. |
 | `rubricas/` | Define calidad antes de ver las respuestas. |
-| `trazas/` | Guarda la evidencia de uso y duración. |
+| `trazas/` | Guarda evidencia de uso, tiempo y calidad. |
 | `tarjetas/` | Convierte mediciones en una decisión defendible. |
 
 ## Referencias
