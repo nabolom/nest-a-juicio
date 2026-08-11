@@ -13,23 +13,24 @@ pct="$4"
 segundos="$5"
 calidad="$6"
 archivo="trazas/${nombre}.md"
+fecha="$(date -Iseconds)"
 
-cat > "$archivo" <<EOF2
-# Registro de corrida — ${nombre}
-
-> Captura de \\`/usage\\` y rúbrica registrada manualmente. Fecha: $(date -Iseconds).
-
-| Métrica | Valor |
-|---|---:|
-| Tokens totales | ${tokens} |
-| Costo estimado (USD) | ${costo} |
-| % atribuido a subagentes | ${pct}% |
-| Duración (segundos) | ${segundos} |
-| Calidad (0–5) | ${calidad} |
-
-## Captura
-
-Agrega debajo una captura de \\`/usage\\` o un enlace a ella. No sustituyas esta evidencia por memoria.
-EOF2
+{
+  echo "# Registro de corrida — ${nombre}"
+  echo
+  echo "> Captura de \`/usage\` y rúbrica registrada manualmente. Fecha: ${fecha}."
+  echo
+  echo "| Métrica | Valor |"
+  echo "|---|---:|"
+  echo "| Tokens totales | ${tokens} |"
+  echo "| Costo estimado (USD) | ${costo} |"
+  echo "| % atribuido a subagentes | ${pct}% |"
+  echo "| Duración (segundos) | ${segundos} |"
+  echo "| Calidad (0–5) | ${calidad} |"
+  echo
+  echo "## Captura"
+  echo
+  echo "Agrega debajo una captura de \`/usage\` o un enlace a ella. No sustituyas esta evidencia por memoria."
+} > "$archivo"
 
 echo "Registro creado: ${archivo}"
