@@ -1,31 +1,56 @@
 # Nest vs. Swarm — ejercicio final S5
 
-> **No vas a medir la factura de Claude. Vas a observar qué comunicación necesita el problema para elegir la arquitectura mínima suficiente.**
+> **No vas a medir la factura de Claude. Vas a observar qué comunicación necesita un problema para elegir la arquitectura mínima suficiente.**
 
 En este ejercicio todos ejecutan un **Nest** y después observan una demostración de **Swarm** dirigida por el facilitador. Al final no entregas una tabla de tokens: entregas una decisión arquitectónica defendible.
 
 ---
 
-## 1. Primero: el caso
+## 1. Primero clona el ejercicio
 
-Horizonte quiere lanzar **Cobranza Pro** el 15 de octubre. Producto dice que el sistema está listo, Ventas tiene 40 clientes interesados, Riesgo prohíbe activación automática para 12 clientes regulados y Operaciones solo puede completar 15 inscripciones manuales en una semana.
-
-Lee el caso completo antes de hacer nada:
+Abre tu **Terminal**. Copia y pega estas tres líneas, una sola vez y en este orden:
 
 ```bash
-cat caso/lanzamiento-cobranza-pro.md
+git clone https://github.com/nabolom/nest-a-juicio.git
+cd nest-a-juicio
+bash scripts/empezar.sh
 ```
 
-Tu tarea será decidir si Horizonte debe lanzar, hacer un piloto cerrado o posponer; también tendrás que proponer un plan de 72 horas.
+| Comando | En palabras simples |
+|---|---|
+| `git clone …` | Descarga una copia del ejercicio a tu computadora. |
+| `cd nest-a-juicio` | Entra a la carpeta que acabas de descargar. |
+| `bash scripts/empezar.sh` | Revisa que Claude Code esté listo y te recuerda el siguiente paso. **Aún no ejecuta agentes.** |
+
+Si el último comando dice `OK`, estás listo. Si marca un error, no sigas: lee el mensaje. Si pide autenticación, corre `claude auth login` y vuelve a intentar `bash scripts/empezar.sh`.
+
+> **Importante:** no necesitas escribir `cat`. `cat` solo imprime un archivo en la Terminal y no lo usaremos como instrucción para alumnos.
 
 ---
 
-## 2. Después: dos formas de organizar el mismo trabajo
+## 2. El caso — léelo aquí antes de ejecutar agentes
 
-| Patrón | Qué sucede | Úsalo cuando… |
+Horizonte, una empresa ficticia de software de facturación, quiere lanzar **Cobranza Pro** el **15 de octubre**. Debes ayudar a decidir si debe lanzar, hacer un piloto cerrado o posponer.
+
+Estas son las cuatro piezas de información. Todas son verdaderas al mismo tiempo:
+
+| Área | Lo que sabemos | La tensión que introduce |
 |---|---|---|
-| **Nest** | Cuatro especialistas reportan a un líder. El líder decide y sintetiza. Los especialistas no se hablan. | El líder puede recomponer la información con reportes claros. |
-| **Swarm** | Los agentes tienen una lista de tareas compartida y pueden enviarse mensajes directos. | Los especialistas necesitan negociar, desafiarse o coordinar entre sí. |
+| **Producto** | La funcionalidad está lista. Si cambian el flujo de consentimiento, necesitan diez días hábiles de congelamiento y pruebas. | No hay margen para cambiar el consentimiento antes de un lanzamiento amplio el 15 de octubre. |
+| **Ventas** | Hay 40 clientes interesados. Doce pertenecen a sectores regulados. El equipo comercial prometió acceso el 15 de octubre. | Quieren cumplir una promesa comercial sin perder pipeline. |
+| **Riesgo** | Los 12 clientes regulados requieren inscripción manual hasta aprobar el modelo de consentimiento. | No se puede activar automáticamente a esos 12 clientes. |
+| **Operaciones** | Dos personas pueden completar, como máximo, 15 inscripciones manuales durante la primera semana. | Un piloto es viable; una activación amplia puede rebasar la capacidad. |
+
+Al terminar, Claude debe entregar una decisión, evidencia por área, dos tensiones, un plan de 72 horas y algo que aún no puede afirmarse. **No puede inventar aprobaciones, recursos ni fechas.**
+
+---
+
+## 3. Las dos arquitecturas que vamos a comparar
+
+| Patrón | Qué sucede | Cuándo tiene sentido |
+|---|---|---|
+| **Nest** | Producto, Ventas, Riesgo y Operaciones investigan su perspectiva y **reportan a un líder**. El líder integra y decide. | Cuando el líder puede recomponer la información con reportes claros. |
+| **Swarm** | Los agentes tienen una lista de tareas compartida y pueden **mandarse mensajes directos** entre sí. | Cuando los especialistas necesitan negociar, cuestionarse o coordinar entre pares. |
 
 ```text
 NEST                              SWARM
@@ -35,71 +60,67 @@ riesgo ───────┤       │              \_______ líder _______/
 operaciones ──┘       └──> decisión
 ```
 
-La pregunta no es cuál se ve más avanzado. La pregunta es: **¿en este caso los especialistas necesitan hablarse entre sí, o basta con que reporten a un líder?**
+La pregunta no es cuál se ve más avanzado. La pregunta es:
+
+> **Para Cobranza Pro, ¿basta con que las áreas reporten a un líder o necesitan hablarse directamente para resolver las tensiones?**
 
 ---
 
-## 3. Ahora sí: tu predicción
+## 4. Ahora sí: tu predicción
 
-Con el caso y los patrones ya claros, escribe una frase:
+Después de leer el caso y entender ambos patrones, completa esta frase en una nota:
 
 > “Para Cobranza Pro elegiría [Nest / Swarm] porque los especialistas [sí / no] necesitan comunicarse directamente para resolver las tensiones entre Ventas, Riesgo y Operaciones.”
 
-No hay respuesta esperada. Vas a contrastar esta hipótesis después de observar ambos patrones.
+No hay una respuesta esperada. Vas a contrastar tu intuición después de observar ambos patrones.
 
 ---
 
-## 4. Ejecuta el Nest — todos los alumnos
+## 5. Ejecuta el Nest — todos los alumnos
 
-Valida el entorno:
-
-```bash
-bash scripts/empezar.sh
-```
-
-Después ejecuta el Nest:
+En la Terminal, dentro de la carpeta `nest-a-juicio`, ejecuta:
 
 ```bash
 bash scripts/correr-nest.sh
 ```
 
-**Qué ocurrirá:** el coordinador abre cuatro subagentes —Producto, Ventas, Riesgo y Operaciones—. Cada uno reporta su lectura al líder. El líder integra todo en una decisión y un plan de 72 horas.
+**Qué ocurrirá:** Claude Code se abrirá. El coordinador abrirá cuatro especialistas: Producto, Ventas, Riesgo y Operaciones. Cada especialista reporta su lectura al líder. El líder integra los cuatro reportes en una decisión y un plan de 72 horas.
 
-**Qué debes mirar:** cuatro delegaciones en el transcript y la línea final:
+**Qué debes mirar:** verás cuatro delegaciones y, al final, esta línea:
 
 ```text
 NEST COMPLETADO: 4/4 reportes recibidos.
 ```
 
-No uses `/usage` y no calcules costos. Guarda una captura del transcript y escribe `/exit` al terminar.
+Guarda una captura del transcript. Después escribe `/exit` para volver a la Terminal. No necesitas usar `/usage` y no necesitas calcular costos.
 
 ---
 
-## 5. Observa el Swarm — demo del facilitador
+## 6. Observa el Swarm — demo del facilitador
 
-Tu facilitador mostrará el mismo caso como un **Agent Team**. Ahí no solo hay reportes al líder: Riesgo, Ventas y Operaciones pueden intercambiar mensajes, usar una lista de tareas común y ajustar un trade-off entre pares.
+Tu facilitador mostrará el mismo caso como un **Agent Team**. En la demo, Riesgo, Ventas y Operaciones pueden enviarse mensajes directos y usar una lista de tareas común.
 
-Observa tres cosas:
+Mientras lo observas, responde estas tres preguntas:
 
-1. ¿Qué información viaja directamente de un especialista a otro?
-2. ¿Ese intercambio cambia algo que el líder no habría podido resolver con cuatro reportes?
-3. ¿La lista de tareas compartida evita una confusión real o solo añade coordinación?
+1. ¿Qué información viajó directamente de un especialista a otro?
+2. ¿Ese intercambio cambió algo que un líder no habría podido resolver con cuatro reportes?
+3. ¿La lista de tareas compartida resolvió una confusión real o añadió complejidad?
 
-Agent Teams es experimental y puede no estar disponible. Si falla la demo, tu facilitador usará el diagrama y la guía de respaldo en [`facilitador/GUIA-DEMO-SWARM.md`](facilitador/GUIA-DEMO-SWARM.md). No se simulan resultados.
+Agent Teams es experimental. Si no aparece, el facilitador usará la guía de respaldo en [`facilitador/GUIA-DEMO-SWARM.md`](facilitador/GUIA-DEMO-SWARM.md). No se simulan resultados.
 
 ---
 
-## 6. Entrega tu decisión arquitectónica
+## 7. Entrega tu decisión arquitectónica
 
-Copia la tarjeta y complétala con evidencia del Nest y de la demo Swarm:
+En la Terminal, copia la tarjeta:
 
 ```bash
 cp tarjetas/DECISION-ARQUITECTURA.md mi-decision-arquitectonica.md
 ```
 
-Tu decisión puede ser **un solo agente**, **Nest** o **Swarm**. La elección correcta no es la más compleja; es la mínima que permite que la información circule como el caso lo necesita.
+Ábrela en tu editor, completa las preguntas con evidencia del Nest y de la demo Swarm, y elige una opción: **un solo agente**, **Nest** o **Swarm**.
 
-> Si concluyes que el Nest basta, esa es una excelente respuesta. Acabas de evitar complejidad innecesaria.
+> Si concluyes que el Nest basta, esa es una excelente respuesta. Acabas de evitar complejidad que este caso no necesitaba.
 
 ---
 
@@ -112,10 +133,10 @@ Tu decisión puede ser **un solo agente**, **Nest** o **Swarm**. La elección co
 
 | Problema | Qué haces |
 |---|---|
-| `claude: command not found` | Instala Claude Code, abre una terminal nueva y corre otra vez `bash scripts/empezar.sh`. |
+| `claude: command not found` | Instala Claude Code, abre una Terminal nueva y corre otra vez `bash scripts/empezar.sh`. |
 | Error de autenticación | Ejecuta `claude auth login` y vuelve a empezar. |
 | No aparecen cuatro delegaciones | Escribe `/exit` y repite `bash scripts/correr-nest.sh`. |
-| No entiendes la diferencia Nest/Swarm | Relee los diagramas y pregunta: “¿quién necesita hablar con quién?”. |
+| No entiendes la diferencia Nest/Swarm | Relee los dos diagramas y pregunta: “¿quién necesita hablar con quién?”. |
 
 ## Referencias
 
