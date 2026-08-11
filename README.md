@@ -1,98 +1,83 @@
-# Nest a juicio
+# Nest a juicio — ejercicio ejecutable S5
 
-**Ejercicio final de la Sesión 5 — Productividad con Claude (IA) AVANZADO.**
+> **No copies prompts. No adivines cómo usar los agentes. Ejecuta los scripts en orden.**
 
-Aquí no asumimos que “más agentes” es mejor. Vas a resolver dos tareas con la misma configuración y el mismo corpus: una vez con un solo agente y otra con un líder que delega en seis subagentes. Después usarás `/usage`, un cronómetro y una rúbrica para emitir el veredicto.
+Este repo compara el mismo trabajo con un solo agente y con un líder que **debe** coordinar seis subagentes. El resultado no es “qué respuesta se ve mejor”: es una comparación de tokens, costo estimado, duración y calidad bajo la misma rúbrica.
 
-> La única variable que cambia entre cada par de corridas es **delegación a subagentes: sí o no**.
-
-## Qué contiene
-
-| Ruta | Contenido |
-|---|---|
-| `tareas/` | Tarea A (fuentes independientes) y Tarea B (dependencias secuenciales) |
-| `fuentes/` | Corpus fijo, sintético y autocontenido para que las corridas sean comparables |
-| `.claude/agents/` | Seis subagentes de lectura, uno por fuente |
-| `rubricas/` | Cinco criterios comunes de calidad por tarea |
-| `tarjetas/` | Plantilla para emitir los veredictos A y B |
-| `trazas/` | Plantillas para registrar las cuatro capturas de `/usage` del ensayo del facilitador |
-| `scripts/` | Verificación de integridad y registro manual de las corridas |
-
-## Antes de la sesión
+## Paso 1 — Clona y valida
 
 ```bash
 git clone https://github.com/nabolom/nest-a-juicio.git
 cd nest-a-juicio
-bash scripts/verificar-ejercicio.sh
-claude --version
+bash scripts/empezar.sh
 ```
 
-La prueba de integridad debe terminar en `OK`. Entra una vez con `claude`, escribe `hola`, corre `/usage` y confirma que ves tokens y costo estimado. Si no, resuélvelo antes de clase.
+Si el último comando no responde `OK`, no sigas: te dice exactamente qué falta. Debes tener Claude Code instalado e iniciar sesión con `claude auth login` si la validación lo pide.
 
-## Corrida 1 y 2 — baseline de un solo agente
+## Paso 2 — Corre las cuatro sesiones
 
-Corre cada tarea en una sesión distinta. El flag de terminal niega la herramienta `Agent`; por eso la comparación no depende de que el modelo obedezca una instrucción de “no delegar”.
+Ejecuta **una por una** desde la terminal. Cada script abre Claude Code con la tarea ya cargada.
 
-```bash
-claude --disallowedTools Agent
-```
+| # | Qué copias en la terminal | Qué debe pasar |
+|---|---|---|
+| 1 | `bash scripts/correr-baseline-a.sh` | Claude resuelve A solo; no hay delegaciones |
+| 2 | `bash scripts/correr-nest-a.sh` | Claude usa `nest-coordinador`, delega a seis fuentes y muestra `NEST COMPLETADO: 6/6 fuentes recibidas.` |
+| 3 | `bash scripts/correr-baseline-b.sh` | Claude resuelve B solo; no hay delegaciones |
+| 4 | `bash scripts/correr-nest-b.sh` | Claude usa seis fuentes y muestra el cierre del nest |
 
-Dentro de Claude Code, corre `/clear`, abre la tarea correspondiente en `tareas/`, pega su contenido literal y ejecuta. Inicia un cronómetro al enviar la tarea. Cuando termine, corre `/usage`, aplica la rúbrica y registra la corrida:
+> **En cada corrida:** cuando Claude termine, escribe `/usage`, toma una captura y luego escribe `/exit` para volver a la terminal.
+
+Si una corrida nest no muestra seis delegaciones en el transcript **y** la línea `NEST COMPLETADO: 6/6 fuentes recibidas.`, no es válida. Ciérrala y vuelve a correr el script correspondiente.
+
+## Paso 3 — Registra los números
+
+Después de cada `/usage`, copia los números que ves. Reemplaza los valores entre `< >`:
 
 ```bash
 bash scripts/registrar-corrida.sh baseline-a <tokens> <costo_usd> <pct_subagentes> <segundos> <calidad_0a5>
+bash scripts/registrar-corrida.sh nest-a     <tokens> <costo_usd> <pct_subagentes> <segundos> <calidad_0a5>
 bash scripts/registrar-corrida.sh baseline-b <tokens> <costo_usd> <pct_subagentes> <segundos> <calidad_0a5>
+bash scripts/registrar-corrida.sh nest-b     <tokens> <costo_usd> <pct_subagentes> <segundos> <calidad_0a5>
 ```
 
-El porcentaje atribuido a subagentes debe ser aproximadamente 0%. Si no lo es, no compares: confirma que abriste la sesión con el flag correcto.
+La calidad se obtiene al aplicar [`rubricas/rubrica-a.md`](rubricas/rubrica-a.md) o [`rubricas/rubrica-b.md`](rubricas/rubrica-b.md). Es 1 punto por check: máximo 5.
 
-## Corrida 3 y 4 — nest con seis subagentes
-
-Abre una sesión normal:
-
-```bash
-claude
-```
-
-Corre `/clear`. Copia la Tarea A o B y agrega al final:
-
-```text
-Usa los subagentes fuente-1 a fuente-6: uno por fuente del corpus de esta tarea. Devuélveles una asignación de lectura independiente y sintetiza sus hallazgos usando exactamente el formato de salida pedido.
-```
-
-Al terminar, corre `/usage`, aplica la misma rúbrica y registra:
-
-```bash
-bash scripts/registrar-corrida.sh nest-a <tokens> <costo_usd> <pct_subagentes> <segundos> <calidad_0a5>
-bash scripts/registrar-corrida.sh nest-b <tokens> <costo_usd> <pct_subagentes> <segundos> <calidad_0a5>
-```
-
-## Emite el veredicto
-
-Copia la plantilla dos veces y llena una por cada tarea:
+## Paso 4 — Emite tus dos veredictos
 
 ```bash
 cp tarjetas/PLANTILLA-veredicto.md resultados/veredicto-a.md
 cp tarjetas/PLANTILLA-veredicto.md resultados/veredicto-b.md
 ```
 
-Calcula:
+Llena cada tarjeta con sus dos corridas. Tu respuesta puede ser **justifica**, **no justifica** o **evidencia insuficiente**. Un nest que pierde es evidencia útil: no lo maquilles.
 
-| Métrica | Fórmula |
+## Qué hay dentro
+
+| Ruta | Para qué sirve |
 |---|---|
-| N× tokens | `tokens_nest ÷ tokens_baseline` |
-| N× costo | `costo_nest ÷ costo_baseline` |
-| Δ calidad | `calidad_nest − calidad_baseline` |
-| Δ duración | `duración_nest − duración_baseline` |
+| `scripts/` | El camino ejecutable; empieza en `empezar.sh` |
+| `.claude/agents/` | `nest-coordinador` + seis lectores especializados |
+| `tareas/` | Las dos tareas que los scripts ya cargan por ti |
+| `fuentes/` | Corpus fijo; no uses web ni archivos externos |
+| `rubricas/` | La definición objetiva de calidad |
+| `trazas/` | Tus registros y capturas de `/usage` |
+| `tarjetas/` | Tus dos conclusiones finales |
 
-Tu conclusión debe ser una de tres: **justifica**, **no justifica** o **evidencia insuficiente**.
+## La regla experimental
 
-## Transparencia sobre las trazas
+La única variable entre baseline y nest es la delegación a subagentes. El baseline abre Claude Code con `--disallowedTools Agent`. El nest abre el agente principal `nest-coordinador`, que debe invocar `fuente-1` a `fuente-6` y esperar sus resultados antes de responder.
 
-Los archivos en `trazas/` son plantillas de registro, no capturas fabricadas. El facilitador debe ensayar las cuatro corridas autenticadas antes de la sesión y registrar sus valores reales con `scripts/registrar-corrida.sh`. No uses números inventados: una captura real es parte del ejercicio.
+## Si te atoraste
+
+| Lo que ves | Qué haces |
+|---|---|
+| `claude: command not found` | Instala Claude Code y abre una terminal nueva |
+| Error de autenticación | Corre `claude auth login` y después `bash scripts/empezar.sh` |
+| No veo seis delegaciones | Cierra con `/exit` y repite el script nest; no copies un prompt suelto |
+| No entiendo un número de `/usage` | Toma captura y sigue al siguiente paso; lo leeremos en el debrief |
 
 ## Referencias
 
-- [Claude Code — Manage costs effectively](https://code.claude.com/docs/en/costs)
-- [Claude Code — Create custom subagents](https://code.claude.com/docs/en/sub-agents)
-- [Claude Code — Agent teams](https://code.claude.com/docs/en/agent-teams)
+- [Claude Code CLI reference](https://code.claude.com/docs/en/cli-reference)
+- [Custom subagents](https://code.claude.com/docs/en/sub-agents)
+- [Cost and usage](https://code.claude.com/docs/en/costs)

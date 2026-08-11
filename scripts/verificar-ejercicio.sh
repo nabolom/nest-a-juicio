@@ -30,3 +30,11 @@ grep -q 'A1, A2, A3, A4, A5 y A6' rubricas/rubrica-a.md || { echo "Rúbrica A in
 grep -q 'OC-2847' rubricas/rubrica-b.md || { echo "Rúbrica B incompleta" >&2; exit 1; }
 
 echo "OK — nest-a-juicio está completo para el ensayo de facilitación."
+
+test -s ".claude/agents/nest-coordinador.md" || { echo "FALTA agente nest-coordinador" >&2; exit 1; }
+for launcher in empezar preflight abrir-corrida correr-baseline-a correr-nest-a correr-baseline-b correr-nest-b; do
+  test -x "scripts/${launcher}.sh" || { echo "FALTA launcher ejecutable: ${launcher}" >&2; exit 1; }
+done
+grep -q 'exec claude --disallowedTools Agent' scripts/abrir-corrida.sh || { echo "Baseline no ejecutable" >&2; exit 1; }
+grep -q 'exec claude --agent nest-coordinador' scripts/abrir-corrida.sh || { echo "Nest no ejecutable" >&2; exit 1; }
+grep -q 'NEST COMPLETADO: 6/6 fuentes recibidas' .claude/agents/nest-coordinador.md || { echo "Cierre de nest no definido" >&2; exit 1; }
