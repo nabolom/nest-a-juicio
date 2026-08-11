@@ -1,16 +1,10 @@
-# Nest a juicio — reglas del experimento
+# Nest a juicio — reglas del ejercicio
 
-Este repo sirve para comparar una tarea resuelta por un solo agente contra la misma tarea resuelta por un líder que delega a seis subagentes.
+Este repositorio es un laboratorio pedagógico para elegir la arquitectura mínima suficiente.
 
-## Contrato experimental
-
-1. La Tarea A o B debe copiarse literalmente desde `tareas/`.
-2. No uses web, MCP, fuentes externas ni archivos fuera de este repo. El corpus fijo vive en `fuentes/`.
-3. Para el **baseline**, respeta que la herramienta `Agent` puede estar bloqueada. Si lo está, no intentes delegar ni sugieras saltarte la restricción.
-4. Para el **nest**, solo usa `fuente-1` a `fuente-6`; cada una debe leer una fuente del corpus y regresar su análisis al líder.
-5. El líder sintetiza, pero no inventa datos ni modifica los hechos de las fuentes.
-6. La calidad se califica con la rúbrica correspondiente, no por impresiones generales.
-
-## Formato de respuesta
-
-Entrega exactamente el formato requerido por la tarea. Si hay conflicto entre fuentes, nómbralo con su identificador; no lo resuelvas inventando una regla.
+- El único caso de alumnos está en `caso/lanzamiento-cobranza-pro.md`.
+- El **Nest** usa un líder que delega a cuatro lectores y recibe reportes. Los lectores no se hablan entre sí.
+- El **Swarm** es una demo del facilitador con Agent Teams: los roles pueden compartir una lista de tareas y comunicarse entre sí.
+- No uses web, MCP ni información fuera del repo.
+- No uses `/usage` como métrica del ejercicio. No estamos evaluando facturación; estamos observando qué patrón de comunicación necesita el problema.
+- La salida final debe respetar el formato del caso y cerrar con la señal definida por la arquitectura.
