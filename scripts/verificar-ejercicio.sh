@@ -13,10 +13,12 @@ required=(
   "scripts/preflight.sh"
   "scripts/empezar.sh"
   "scripts/correr-nest.sh"
+  "scripts/correr-swarm.sh"
   "tarjetas/DECISION-ARQUITECTURA.md"
   "facilitador/PROMPT-SWARM.md"
   "facilitador/GUIA-DEMO-SWARM.md"
   "tests/test-nest-launcher.sh"
+  "tests/test-swarm-launcher.sh"
 )
 
 for file in "${required[@]}"; do
@@ -32,7 +34,9 @@ grep -q 'Agent(ventas)' .claude/agents/nest-coordinador.md || { echo "Nest no pu
 grep -q 'Agent(riesgo)' .claude/agents/nest-coordinador.md || { echo "Nest no puede delegar a riesgo" >&2; exit 1; }
 grep -q 'Agent(operaciones)' .claude/agents/nest-coordinador.md || { echo "Nest no puede delegar a operaciones" >&2; exit 1; }
 grep -q 'exec claude --agent nest-coordinador' scripts/correr-nest.sh || { echo "Launcher Nest no ejecutable" >&2; exit 1; }
+grep -q 'CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1' scripts/correr-swarm.sh || { echo "Launcher Swarm no activa Agent Teams" >&2; exit 1; }
+grep -q 'Agent Team' scripts/correr-swarm.sh || { echo "Launcher Swarm no exige Agent Team" >&2; exit 1; }
 grep -q 'NEST COMPLETADO: 4/4 reportes recibidos' README.md || { echo "Señal de salida ausente" >&2; exit 1; }
 grep -q 'No necesitas escribir /usage' scripts/correr-nest.sh || { echo "Launcher Nest no explica que /usage queda fuera del ejercicio" >&2; exit 1; }
 
-echo "OK — ejercicio S5 simplificado: Nest para alumnos, Swarm para demo y tarjeta de arquitectura."
+echo "OK — ejercicio S5: Nest y Swarm ejecutables + tarjeta de arquitectura."

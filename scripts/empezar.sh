@@ -10,9 +10,11 @@ Antes de ejecutar, abre README.md y lee:
   2. La diferencia entre Nest y Swarm.
   3. La pregunta de predicción.
 
-Después corre solamente:
-  bash scripts/correr-nest.sh
+Después corre los dos patrones, uno a la vez:
+  1. bash scripts/correr-nest.sh
+  2. bash scripts/correr-swarm.sh
 
-Tu facilitador demostrará el Swarm. Tu entregable no es un número de /usage:
-es la tarjeta tarjetas/DECISION-ARQUITECTURA.md.
+El Swarm usa Agent Teams, una función experimental. Si no aparecen teammates
+ni tareas compartidas en 90 segundos, escribe /exit y usa el Plan B del README.
+Tu entregable es la tarjeta tarjetas/DECISION-ARQUITECTURA.md.
 MSG
