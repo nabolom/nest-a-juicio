@@ -24,8 +24,8 @@ for i in 1 2 3 4 5 6; do
   test -s "fuentes/tarea-b/B${i}.md" || { echo "FALTA fuente B${i}" >&2; exit 1; }
 done
 
-grep -q 'claude --disallowedTools Agent' README.md || { echo "Baseline no bloqueado" >&2; exit 1; }
-grep -q 'fuente-1 a fuente-6' README.md || { echo "Nest no documentado" >&2; exit 1; }
+grep -q -- '--disallowedTools Agent' README.md || { echo "Baseline no documentado" >&2; exit 1; }
+grep -q 'NEST COMPLETADO: 6/6 fuentes recibidas' README.md || { echo "Nest no documentado" >&2; exit 1; }
 grep -q 'A1, A2, A3, A4, A5 y A6' rubricas/rubrica-a.md || { echo "Rúbrica A incompleta" >&2; exit 1; }
 grep -q 'OC-2847' rubricas/rubrica-b.md || { echo "Rúbrica B incompleta" >&2; exit 1; }
 
