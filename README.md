@@ -97,7 +97,7 @@ La primera confirma que la conclusión de negocio ya quedó guardada en [`result
 
 ---
 
-## 6. Ejecuta el Swarm — alumnos y facilitador
+## 6. Ejecuta el Swarm — todos alumnos
 
 Ahora corre el mismo caso como un **Agent Team**. En la Terminal, todavía dentro de la carpeta `nest-a-juicio`, ejecuta:
 
