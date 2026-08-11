@@ -2,6 +2,7 @@
 set -euo pipefail
 
 bash scripts/preflight.sh
+mkdir -p resultados
 caso="$(cat caso/lanzamiento-cobranza-pro.md)"
 prompt=$(cat <<EOF2
 EJERCICIO S5 — EJECUTA EL NEST
@@ -11,10 +12,13 @@ Resuelve el siguiente caso mediante el agente nest-coordinador. No leas ni resue
 CASO:
 ${caso}
 
-Al finalizar, la respuesta debe cerrar con: NEST COMPLETADO: 4/4 reportes recibidos.
+Al finalizar, el coordinador debe guardar la conclusión completa en `resultados/conclusion-nest.md` y cerrar con:
+ARCHIVO GUARDADO: resultados/conclusion-nest.md
+NEST COMPLETADO: 4/4 reportes recibidos.
 EOF2
 )
 
 echo "Abriendo el NEST. Observa las cuatro delegaciones: producto, ventas, riesgo y operaciones."
+echo "Al terminar se guardará la decisión en resultados/conclusion-nest.md; podrás adjuntarla o descargarla desde tu carpeta del repo."
 echo "No necesitas escribir /usage. Cuando termine, guarda una captura del transcript y escribe /exit."
 exec claude --agent nest-coordinador "$prompt"

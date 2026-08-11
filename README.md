@@ -86,13 +86,14 @@ bash scripts/correr-nest.sh
 
 **Qué ocurrirá:** Claude Code se abrirá. El coordinador abrirá cuatro especialistas: Producto, Ventas, Riesgo y Operaciones. Cada especialista reporta su lectura al líder. El líder integra los cuatro reportes en una decisión y un plan de 72 horas.
 
-**Qué debes mirar:** verás cuatro delegaciones y, al final, esta línea:
+**Qué debes mirar:** verás cuatro delegaciones y, al final, estas dos líneas:
 
 ```text
+ARCHIVO GUARDADO: resultados/conclusion-nest.md
 NEST COMPLETADO: 4/4 reportes recibidos.
 ```
 
-Guarda una captura del transcript. Después escribe `/exit` para volver a la Terminal. No necesitas usar `/usage` y no necesitas calcular costos.
+La primera confirma que la conclusión de negocio ya quedó guardada en [`resultados/conclusion-nest.md`](resultados/README.md): ahí tendrás la decisión, la evidencia por área, las tensiones y el plan de 72 horas. Guarda una captura del transcript. Después escribe `/exit` para volver a la Terminal. No necesitas usar `/usage` y no necesitas calcular costos.
 
 ---
 
@@ -127,12 +128,36 @@ Agent Teams es experimental. Si en 90 segundos no aparecen teammates, escribe `/
 En la Terminal, copia la tarjeta:
 
 ```bash
-cp tarjetas/DECISION-ARQUITECTURA.md mi-decision-arquitectonica.md
+cp tarjetas/DECISION-ARQUITECTURA.md resultados/decision-arquitectonica.md
 ```
 
 Ábrela en tu editor, completa las preguntas con evidencia de tu Nest y, cuando Agent Teams haya funcionado, de tu Swarm. Si Agent Teams no apareció, usa la demo o el Plan B del facilitador. Después elige: **un solo agente**, **Nest** o **Swarm**.
 
 > Si concluyes que el Nest basta, esa es una excelente respuesta. Acabas de evitar complejidad que este caso no necesitaba.
+
+---
+
+## 8. Crea y descarga tu entrega final
+
+Cuando tengas `resultados/conclusion-nest.md` y, si aplica, `resultados/decision-arquitectonica.md`, abre Claude Code dentro de este repo:
+
+```bash
+claude
+```
+
+Y escribe:
+
+```text
+/cerrar-s5
+```
+
+El comando crea `resultados/entrega-s5.md`: un solo archivo que integra la conclusión del caso, tu decisión arquitectónica y la evidencia disponible. La Terminal te confirmará:
+
+```text
+ENTREGA LISTA: resultados/entrega-s5.md
+```
+
+Para adjuntarlo, abre la carpeta `resultados` en Finder, Explorador de archivos o el selector de archivos de la plataforma donde entregarás el trabajo. El archivo queda en **tu copia local** del repo; no se sube automáticamente al repositorio público.
 
 ---
 

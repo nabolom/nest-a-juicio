@@ -6,6 +6,7 @@ required=(
   "CLAUDE.md"
   "caso/lanzamiento-cobranza-pro.md"
   ".claude/agents/nest-coordinador.md"
+  ".claude/commands/cerrar-s5.md"
   ".claude/agents/producto.md"
   ".claude/agents/ventas.md"
   ".claude/agents/riesgo.md"
@@ -15,10 +16,13 @@ required=(
   "scripts/correr-nest.sh"
   "scripts/correr-swarm.sh"
   "tarjetas/DECISION-ARQUITECTURA.md"
+  "resultados/.gitkeep"
+  "resultados/README.md"
   "facilitador/PROMPT-SWARM.md"
   "facilitador/GUIA-DEMO-SWARM.md"
   "tests/test-nest-launcher.sh"
   "tests/test-swarm-launcher.sh"
+  "tests/test-conclusion-flow.sh"
 )
 
 for file in "${required[@]}"; do
@@ -37,6 +41,8 @@ grep -q 'exec claude --agent nest-coordinador' scripts/correr-nest.sh || { echo 
 grep -q 'CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1' scripts/correr-swarm.sh || { echo "Launcher Swarm no activa Agent Teams" >&2; exit 1; }
 grep -q 'Agent Team' scripts/correr-swarm.sh || { echo "Launcher Swarm no exige Agent Team" >&2; exit 1; }
 grep -q 'NEST COMPLETADO: 4/4 reportes recibidos' README.md || { echo "Señal de salida ausente" >&2; exit 1; }
+grep -q 'resultados/conclusion-nest.md' README.md || { echo "README no explica la conclusión guardada" >&2; exit 1; }
+grep -q '/cerrar-s5' README.md || { echo "README no explica la entrega final" >&2; exit 1; }
 grep -q 'No necesitas escribir /usage' scripts/correr-nest.sh || { echo "Launcher Nest no explica que /usage queda fuera del ejercicio" >&2; exit 1; }
 
-echo "OK — ejercicio S5: Nest y Swarm ejecutables + tarjeta de arquitectura."
+echo "OK — ejercicio S5: Nest y Swarm ejecutables + conclusión y entrega descargable."
