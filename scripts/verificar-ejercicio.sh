@@ -7,6 +7,7 @@ required=(
   "caso/lanzamiento-cobranza-pro.md"
   ".claude/agents/nest-coordinador.md"
   ".claude/commands/cerrar-s5.md"
+  ".claude/commands/decidir-arquitectura.md"
   ".claude/agents/producto.md"
   ".claude/agents/ventas.md"
   ".claude/agents/riesgo.md"
@@ -23,6 +24,7 @@ required=(
   "tests/test-nest-launcher.sh"
   "tests/test-swarm-launcher.sh"
   "tests/test-conclusion-flow.sh"
+  "tests/test-decision-command.sh"
 )
 
 for file in "${required[@]}"; do
@@ -43,6 +45,7 @@ grep -q 'Agent Team' scripts/correr-swarm.sh || { echo "Launcher Swarm no exige 
 grep -q 'NEST COMPLETADO: 4/4 reportes recibidos' README.md || { echo "Señal de salida ausente" >&2; exit 1; }
 grep -q 'resultados/conclusion-nest.md' README.md || { echo "README no explica la conclusión guardada" >&2; exit 1; }
 grep -q '/cerrar-s5' README.md || { echo "README no explica la entrega final" >&2; exit 1; }
+grep -q '/decidir-arquitectura' README.md || { echo "README no explica la decisión guiada" >&2; exit 1; }
 grep -q 'No necesitas escribir /usage' scripts/correr-nest.sh || { echo "Launcher Nest no explica que /usage queda fuera del ejercicio" >&2; exit 1; }
 
-echo "OK — ejercicio S5: Nest y Swarm ejecutables + conclusión y entrega descargable."
+echo "OK — ejercicio S5: Nest y Swarm ejecutables + decisión guiada y entrega descargable."

@@ -123,15 +123,29 @@ Agent Teams es experimental. Si en 90 segundos no aparecen teammates, escribe `/
 
 ---
 
-## 7. Entrega tu decisión arquitectónica
+## 7. Deja que Claude te ayude a decidir la arquitectura
 
-En la Terminal, copia la tarjeta:
+No llenes la ficha solo. Abre Claude Code dentro de este repo:
 
 ```bash
-cp tarjetas/DECISION-ARQUITECTURA.md resultados/decision-arquitectonica.md
+claude
 ```
 
-Ábrela en tu editor, completa las preguntas con evidencia de tu Nest y, cuando Agent Teams haya funcionado, de tu Swarm. Si Agent Teams no apareció, usa la demo o el Plan B del facilitador. Después elige: **un solo agente**, **Nest** o **Swarm**.
+Y escribe:
+
+```text
+/decidir-arquitectura
+```
+
+Claude te hará una entrevista breve: qué viste en el Nest, qué evidencia viste —o no viste— en el Swarm, si los roles necesitaban hablarse directamente y qué tendría que cambiar para elegir otra arquitectura. Te pedirá confirmación antes de guardar nada.
+
+Cuando confirmes, creará:
+
+```text
+resultados/decision-arquitectonica.md
+```
+
+La decisión puede ser **un solo agente**, **Nest**, **Swarm** o **evidencia insuficiente**. No hay un premio por elegir lo más complejo.
 
 > Si concluyes que el Nest basta, esa es una excelente respuesta. Acabas de evitar complejidad que este caso no necesitaba.
 
@@ -158,6 +172,12 @@ ENTREGA LISTA: resultados/entrega-s5.md
 ```
 
 Para adjuntarlo, abre la carpeta `resultados` en Finder, Explorador de archivos o el selector de archivos de la plataforma donde entregarás el trabajo. El archivo queda en **tu copia local** del repo; no se sube automáticamente al repositorio público.
+
+---
+
+## 9. Llévalo a tu propio proceso
+
+`nest-a-juicio` es un caso guiado. Cuando termines, crea tu propia copia privada de la [plantilla para configurar Nest o Swarm](https://github.com/nabolom/plantilla-nest-swarm): ahí Claude te entrevista sobre **tu** proceso y solo después configura el patrón que tu caso necesita.
 
 ---
 
