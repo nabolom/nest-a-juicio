@@ -96,9 +96,21 @@ Guarda una captura del transcript. Después escribe `/exit` para volver a la Ter
 
 ---
 
-## 6. Observa el Swarm — demo del facilitador
+## 6. Ejecuta el Swarm — alumnos y facilitador
 
-Tu facilitador mostrará el mismo caso como un **Agent Team**. En la demo, Riesgo, Ventas y Operaciones pueden enviarse mensajes directos y usar una lista de tareas común.
+Ahora corre el mismo caso como un **Agent Team**. En la Terminal, todavía dentro de la carpeta `nest-a-juicio`, ejecuta:
+
+```bash
+bash scripts/correr-swarm.sh
+```
+
+**Qué ocurrirá:** el script activa Agent Teams y pide cuatro teammates, una lista de tareas compartida y mensajes directos entre Riesgo, Ventas y Operaciones.
+
+**Qué debes mirar:** dentro de los primeros 90 segundos deben aparecer cuatro teammates, tareas compartidas y al menos una conversación entre pares. La corrida solo cuenta como Swarm cuando termina con:
+
+```text
+SWARM COMPLETADO: equipo, tareas compartidas y mensajes entre pares observados.
+```
 
 Mientras lo observas, responde estas tres preguntas:
 
@@ -106,7 +118,7 @@ Mientras lo observas, responde estas tres preguntas:
 2. ¿Ese intercambio cambió algo que un líder no habría podido resolver con cuatro reportes?
 3. ¿La lista de tareas compartida resolvió una confusión real o añadió complejidad?
 
-Agent Teams es experimental. Si no aparece, el facilitador usará la guía de respaldo en [`facilitador/GUIA-DEMO-SWARM.md`](facilitador/GUIA-DEMO-SWARM.md). No se simulan resultados.
+Agent Teams es experimental. Si en 90 segundos no aparecen teammates, escribe `/exit`, no pierdas más tiempo y usa el Plan B de [`facilitador/GUIA-DEMO-SWARM.md`](facilitador/GUIA-DEMO-SWARM.md). El facilitador correrá la misma ruta con el grupo y guiará ese contraste.
 
 ---
 
@@ -118,7 +130,7 @@ En la Terminal, copia la tarjeta:
 cp tarjetas/DECISION-ARQUITECTURA.md mi-decision-arquitectonica.md
 ```
 
-Ábrela en tu editor, completa las preguntas con evidencia del Nest y de la demo Swarm, y elige una opción: **un solo agente**, **Nest** o **Swarm**.
+Ábrela en tu editor, completa las preguntas con evidencia de tu Nest y, cuando Agent Teams haya funcionado, de tu Swarm. Si Agent Teams no apareció, usa la demo o el Plan B del facilitador. Después elige: **un solo agente**, **Nest** o **Swarm**.
 
 > Si concluyes que el Nest basta, esa es una excelente respuesta. Acabas de evitar complejidad que este caso no necesitaba.
 
