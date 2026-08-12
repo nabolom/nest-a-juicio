@@ -106,7 +106,7 @@ Luego:
 
 > “No les voy a pedir que llenen una entrevista larga. Claude lee el Nest, el reporte Swarm si existe y el caso. Nos explica qué pasó, por qué el Swarm tardó más y si esa comunicación adicional justificó la arquitectura.”
 
-Muestra `resultados/debrief-swarm.md`. Lee en voz alta solamente el diagnóstico de arquitectura.
+Muestra `resultados/debrief-swarm.md`. Lee en voz alta el veredicto y las tres razones: **para Cobranza Pro elegimos Nest** porque las áreas aportan hechos separables, Riesgo fija una restricción no negociable y el líder puede convertir esos reportes en un piloto cerrado sin negociación iterativa entre pares.
 
 ### Minuto 6:30–8:30 — Alumnos
 

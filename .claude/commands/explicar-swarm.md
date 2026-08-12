@@ -1,61 +1,80 @@
 ---
-description: Explica automáticamente qué ocurrió en Nest y Swarm, guarda un diagnóstico breve y no hace una entrevista.
+description: Compara Nest vs. Swarm para Cobranza Pro y explica por qué Nest es la arquitectura mínima suficiente.
 ---
 
-# Explicar el Swarm
+# Diagnóstico Nest vs. Swarm — Cobranza Pro
 
-Tu papel es ser el debrief pedagógico del ejercicio. **No entrevistes al alumno, no pidas que complete una tarjeta y no inventes evidencia.** Lee los archivos que existan y explica de forma clara qué pasó.
+Tu papel es explicar el experimento completo a los alumnos. **No entrevistes al alumno, no le pidas completar una tarjeta y no inventes evidencia.** El diagnóstico de esta clase debe responder una pregunta concreta:
+
+> **¿Por qué para Cobranza Pro se elegiría un Nest y no un Swarm?**
 
 ## 1. Lee la evidencia disponible
 
-1. `resultados/conclusion-nest.md` — obligatorio si existe.
-2. `resultados/reporte-swarm.md` — opcional; puede no existir si Agent Teams no apareció o la corrida no terminó.
-3. `caso/lanzamiento-cobranza-pro.md` — para anclar la explicación al caso.
+1. `resultados/conclusion-nest.md` — obligatorio. Si no existe, detente y pide correr `bash scripts/correr-nest.sh`.
+2. `resultados/reporte-swarm.md` — opcional. Puede no existir si Agent Teams no apareció o la corrida no terminó.
+3. `caso/lanzamiento-cobranza-pro.md` — obligatorio, para anclar el diagnóstico a los hechos del caso.
 
-Si `conclusion-nest.md` no existe, detente y di que primero se debe correr el Nest. Si no existe `reporte-swarm.md`, continúa de todos modos: el diagnóstico debe explicar que no hubo evidencia de un Swarm válido.
+Si no existe `reporte-swarm.md`, continúa: la ausencia de una corrida válida no impide explicar la diferencia estructural entre los patrones. Decláralo como ausencia de evidencia de ejecución, no como evidencia de que Swarm falla siempre.
 
-## 2. Escribe el debrief
+## 2. Escribe el diagnóstico
 
 Crea `resultados/debrief-swarm.md` con esta estructura exacta:
 
 ```markdown
-# Qué sucedió en el experimento Nest vs. Swarm
+# Diagnóstico de arquitectura — Nest vs. Swarm
 
-## 1. Lo que resolvió el Nest
+## 1. El problema que resolvimos
 
-[Resume en lenguaje llano la decisión de Cobranza Pro y por qué el líder pudo integrarla con reportes de Producto, Ventas, Riesgo y Operaciones.]
+[Resume la decisión de Cobranza Pro: lanzamiento, piloto cerrado o posposición, y los cuatro hechos relevantes de Producto, Ventas, Riesgo y Operaciones.]
 
-## 2. Lo que intentó hacer el Swarm
+## 2. Qué hizo el Nest
 
-[Explica que Agent Teams creó —o intentó crear— sesiones separadas, tareas compartidas y mensajes directos. Si existe el reporte, nombra los teammates, la tarea compartida y los mensajes que sí aparecen. Si no existe, di literalmente: "No hay evidencia de un Swarm válido en esta corrida".]
+[Explica que los cuatro roles trabajaron sobre perspectivas separadas y reportaron a un líder. Enumera qué aportó cada rol y cómo el líder pudo integrar los reportes en una decisión verificable.]
 
-## 3. Por qué el Swarm tardó más
+## 3. Qué habría agregado el Swarm
 
-[Explica sin números inventados: cada teammate tiene que abrir contexto, completar una tarea, coordinar y esperar la síntesis. El retraso no prueba que Agent Teams esté roto; muestra el costo operativo de agregar coordinación.]
+[Explica que un Swarm agrega teammates con sesiones separadas, tareas compartidas y mensajes directos entre pares. Si existe `reporte-swarm.md`, especifica qué tareas y mensajes se observaron. Si no existe, escribe literalmente: "No hay evidencia de un Swarm válido en esta corrida".]
 
-## 4. ¿La comunicación adicional cambió la decisión?
+## 4. Comparación directa
 
-[Compara la decisión del Nest contra el reporte Swarm si existe. Si el Swarm no cambió la decisión, dilo claramente: para este caso, el líder podía resolver la tensión con reportes claros. Si no hay evidencia, di que no se puede concluir.]
+| Pregunta | Nest | Swarm |
+|---|---|---|
+| ¿Cómo viaja la información? | [reportes al líder] | [tareas compartidas y mensajes entre pares] |
+| ¿Qué coordinación extra añade? | [síntesis del líder] | [sesiones, tareas, mensajes y síntesis] |
+| ¿Cambió la decisión de Cobranza Pro? | [respuesta basada en evidencia] | [respuesta basada en reporte o evidencia no disponible] |
 
-## 5. Diagnóstico de arquitectura de Claude
+## 5. Diagnóstico de Claude: para este caso elegimos Nest
 
-**Recomendación para Cobranza Pro:** `un solo agente / Nest / Swarm / evidencia insuficiente`
+**Recomendación:** `Nest`
 
-**Porque:** [máximo tres razones basadas únicamente en archivos disponibles.]
+**Por qué Nest es suficiente:**
 
-## 6. Qué aprendimos
+1. [Explica que Producto, Ventas, Riesgo y Operaciones aportan hechos que pueden investigarse por separado.]
+2. [Explica que Riesgo establece una restricción no negociable —los 12 clientes regulados no se activan automáticamente— y el líder puede combinar esa restricción con la capacidad de 15 inscripciones y la promesa comercial sin una negociación iterativa entre peers.]
+3. [Explica que la salida buscada es una decisión única y un plan de 72 horas; un líder con reportes claros puede producirla y verificarla.]
 
-[Explica en tres frases: Nest = reportes a líder; Swarm = tareas compartidas y mensajes entre pares; la arquitectura mínima suficiente gana al patrón más complejo.]
+## 6. Por qué no elegimos Swarm aquí
+
+[Explica que Swarm no es “malo”: agrega tareas compartidas, mensajes directos, sesiones separadas y tiempo de coordinación. Para Cobranza Pro, esa coordinación no es necesaria para descubrir o resolver una tensión que el líder no pueda sintetizar. Si el reporte Swarm produjo el mismo piloto y las mismas restricciones, dilo claramente.]
+
+## 7. Cuándo sí cambiaría la decisión
+
+[Explica que Swarm se justificaría si Ventas, Riesgo y Operaciones necesitaran negociar repetidamente cambios de capacidad, condiciones o prioridades en tiempo real y esos intercambios alteraran el plan. No inventes que eso ocurrió en Cobranza Pro.]
+
+## 8. Qué aprendimos
+
+[En tres frases: un Nest divide investigación y centraliza síntesis; un Swarm descentraliza coordinación; la arquitectura mínima suficiente es mejor que la más compleja.]
 ```
 
-La recomendación debe ser **Nest** si la evidencia muestra que el líder pudo resolver la tensión sin que la conversación directa modificara el plan. No elijas Swarm solo porque se logró formar un Agent Team.
+La recomendación debe ser **Nest**. No cambies el veredicto a Swarm solo porque Agent Teams se haya formado: para este caso, el propósito didáctico es mostrar que la comunicación directa agrega capacidad, pero no cambia la decisión que un líder puede construir con reportes claros.
 
 ## 3. Confirma
 
 Después de escribir el archivo, responde exactamente:
 
 ```text
-DEBRIEF GUARDADO: resultados/debrief-swarm.md
+DIAGNÓSTICO GUARDADO: resultados/debrief-swarm.md
+VEREDICTO: para Cobranza Pro, Nest es suficiente.
 ```
 
-Después muestra un resumen de tres viñetas, no más.
+Después muestra un resumen de tres viñetas: qué hizo el Nest, qué añadió el Swarm y por qué el Nest gana en este caso.

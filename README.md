@@ -140,7 +140,7 @@ Claude lee la conclusión del Nest, el reporte Swarm si existe y el caso. Despu�
 resultados/debrief-swarm.md
 ```
 
-El debrief explica, en lenguaje simple: qué resolvió el Nest, qué intentó hacer el Swarm, por qué el Swarm tardó más, si la comunicación adicional cambió realmente la decisión y qué arquitectura mínima recomienda para Cobranza Pro.
+El debrief compara ambos patrones en lenguaje simple: qué resolvió el Nest, qué capacidad adicional intentó agregar el Swarm, si esa comunicación cambió realmente la decisión y el veredicto explícito para este caso: **Nest es suficiente** porque un líder puede integrar reportes claros sin negociación iterativa entre pares.
 
 > Si concluye que el Nest basta, esa es una excelente respuesta. Acabas de evitar complejidad que este caso no necesitaba.
 
