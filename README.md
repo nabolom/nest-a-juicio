@@ -2,7 +2,7 @@
 
 > **No vas a medir la factura de Claude. Vas a observar qué comunicación necesita un problema para elegir la arquitectura mínima suficiente.**
 
-En este ejercicio todos ejecutan un **Nest** y después observan una demostración de **Swarm** dirigida por el facilitador. Al final no entregas una tabla de tokens: entregas una decisión arquitectónica defendible.
+En este ejercicio todos ejecutan un **Nest** y después **Swarm**. Al final no entregas una tabla de tokens: entregas una decisión arquitectónica defendible.
 
 ---
 
