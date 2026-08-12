@@ -105,27 +105,24 @@ Ahora corre el mismo caso como un **Agent Team**. En la Terminal, todavía dentr
 bash scripts/correr-swarm.sh
 ```
 
-**Qué ocurrirá:** el script activa Agent Teams y pide cuatro teammates, una lista de tareas compartida y mensajes directos entre Riesgo, Ventas y Operaciones.
+**Qué ocurrirá:** el líder conserva Producto y crea tres teammates: Ventas, Riesgo y Operaciones. Verás cuatro tareas compartidas y solo dos mensajes directos obligatorios: Riesgo → Ventas y la respuesta de Ventas. Esto es deliberadamente breve: queremos observar coordinación, no esperar una investigación larga.
 
-**Qué debes mirar:** dentro de los primeros 90 segundos deben aparecer cuatro teammates, tareas compartidas y al menos una conversación entre pares. La corrida solo cuenta como Swarm cuando termina con:
+**Qué debes mirar:** dentro de los primeros 90 segundos deben aparecer tres teammates, tareas compartidas y los dos mensajes entre pares. La corrida solo cuenta como Swarm cuando termina con:
 
 ```text
-SWARM COMPLETADO: equipo, tareas compartidas y mensajes entre pares observados.
+SALIDA GUARDADA: resultados/reporte-swarm.md
+SWARM COMPLETADO: teammates, tareas compartidas y dos mensajes entre pares observados.
 ```
 
-Mientras lo observas, responde estas tres preguntas:
+El archivo [`resultados/reporte-swarm.md`](resultados/README.md) debe contener la decisión, evidencia por rol, comunicación observada, qué cambió —o no— frente al Nest, plan de 72 horas y lo que aún no se puede afirmar.
 
-1. ¿Qué información viajó directamente de un especialista a otro?
-2. ¿Ese intercambio cambió algo que un líder no habría podido resolver con cuatro reportes?
-3. ¿La lista de tareas compartida resolvió una confusión real o añadió complejidad?
-
-Agent Teams es experimental. Si en 90 segundos no aparecen teammates, escribe `/exit`, no pierdas más tiempo y usa el Plan B de [`facilitador/GUIA-DEMO-SWARM.md`](facilitador/GUIA-DEMO-SWARM.md). El facilitador correrá la misma ruta con el grupo y guiará ese contraste.
+Agent Teams es experimental. Si en 90 segundos no aparecen teammates, escribe `/exit`, no pierdas más tiempo y usa el Plan B de [`facilitador/GUIA-DEMO-SWARM.md`](facilitador/GUIA-DEMO-SWARM.md). El debrief de Claude también puede explicar el contraste sin una corrida válida.
 
 ---
 
-## 7. Deja que Claude te ayude a decidir la arquitectura
+## 7. Deja que Claude te explique qué sucedió
 
-No llenes la ficha solo. Abre Claude Code dentro de este repo:
+No necesitas completar una entrevista larga ni responder preguntas complejas durante el taller. Abre Claude Code dentro de este repo:
 
 ```bash
 claude
@@ -134,26 +131,26 @@ claude
 Y escribe:
 
 ```text
-/decidir-arquitectura
+/explicar-swarm
 ```
 
-Claude te hará una entrevista breve: qué viste en el Nest, qué evidencia viste —o no viste— en el Swarm, si los roles necesitaban hablarse directamente y qué tendría que cambiar para elegir otra arquitectura. Te pedirá confirmación antes de guardar nada.
-
-Cuando confirmes, creará:
+Claude lee la conclusión del Nest, el reporte Swarm si existe y el caso. Después crea:
 
 ```text
-resultados/decision-arquitectonica.md
+resultados/debrief-swarm.md
 ```
 
-La decisión puede ser **un solo agente**, **Nest**, **Swarm** o **evidencia insuficiente**. No hay un premio por elegir lo más complejo.
+El debrief explica, en lenguaje simple: qué resolvió el Nest, qué intentó hacer el Swarm, por qué el Swarm tardó más, si la comunicación adicional cambió realmente la decisión y qué arquitectura mínima recomienda para Cobranza Pro.
 
-> Si concluyes que el Nest basta, esa es una excelente respuesta. Acabas de evitar complejidad que este caso no necesitaba.
+> Si concluye que el Nest basta, esa es una excelente respuesta. Acabas de evitar complejidad que este caso no necesitaba.
+
+`/decidir-arquitectura` sigue disponible como actividad opcional para quien quiera defender una decisión propia en más detalle.
 
 ---
 
 ## 8. Crea y descarga tu entrega final
 
-Cuando tengas `resultados/conclusion-nest.md` y, si aplica, `resultados/decision-arquitectonica.md`, abre Claude Code dentro de este repo:
+Cuando tengas `resultados/conclusion-nest.md` y `resultados/debrief-swarm.md`, abre Claude Code dentro de este repo:
 
 ```bash
 claude

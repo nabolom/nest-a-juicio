@@ -17,8 +17,10 @@ chmod +x "$mock_dir/claude"
 
 PATH="$mock_dir:$PATH" SWARM_TEST_LOG="$log_file" bash "$repo_dir/scripts/correr-swarm.sh" >/dev/null
 grep -Fq -- 'ENV=1' "$log_file"
-grep -Fq -- 'EJERCICIO S5 — EJECUTA EL SWARM COMO AGENT TEAM' "$log_file"
-grep -Fq -- 'Riesgo debe enviar un mensaje directo a Ventas' "$log_file"
-grep -Fq -- 'SWARM COMPLETADO' "$log_file"
+grep -Fq -- 'EJERCICIO S5 — SWARM BREVE COMO AGENT TEAM' "$log_file"
+grep -Fq -- 'exactamente tres teammates' "$log_file"
+grep -Fq -- 'Riesgo debe enviar a Ventas' "$log_file"
+grep -Fq -- 'resultados/reporte-swarm.md' "$log_file"
+grep -Fq -- 'SWARM COMPLETADO: teammates, tareas compartidas y dos mensajes entre pares observados.' "$log_file"
 
-echo "OK — launcher Swarm activa Agent Teams y carga el caso con comunicación entre pares."
+echo "OK — launcher Swarm breve activa Agent Teams y exige un reporte final con comunicación entre pares."
